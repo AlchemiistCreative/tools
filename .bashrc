@@ -19,7 +19,8 @@ else
 fi
 
 
-if grep -q "microsoft" /proc/version; then                                                                                alias gtc='cd /mnt/c/WSL'
+if grep -q "microsoft" /proc/version; then                                                                                
+  alias gtc='cd /mnt/c/WSL'
 else
   echo "Not running on WSL"
 fi
