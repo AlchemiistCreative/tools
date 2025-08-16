@@ -2,28 +2,8 @@
 iatest=$(expr index "$-" i)
 
 #######################################################
-# SOURCED ALIAS'S AND SCRIPTS BY zachbrowne.me
+# SOURCED ALIAS'S AND SCRIPTS BY alchemistcreative
 #######################################################
-
-# Check if gcloud is installed
-if command -v gcloud &> /dev/null; then
-  gssh() {
-    if [ $# -ne 2 ]; then
-      echo "Usage: gssh <INSTANCE_NAME> <ZONE>"
-      return 1
-    fi
-    gcloud compute ssh "$1" --tunnel-through-iap --zone="$2"
-  }
-else
-  echo "gcloud CLI not found. Install it to use 'gssh'."
-fi
-
-
-if grep -q "microsoft" /proc/version; then                                                                                
-  alias gtc='cd /mnt/c/WSL'
-else
-  echo "Not running on WSL"
-fi
 
 
 # Source global definitions
@@ -92,6 +72,94 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
+
+###### Check if bash-completion is installed
+if [ ! -f /usr/share/bash-completion/bash_completion ]; then
+    echo "bash-completion not installed ❌"
+    echo "Installing it..."
+
+    distro=$(distribution)
+
+    case $distro in
+        redhat)
+            if command -v dnf &>/dev/null; then
+                sudo dnf install -y bash-completion
+            else
+                sudo yum install -y bash-completion
+            fi
+            ;;
+        debian)
+            sudo apt-get update -y
+            sudo apt-get install -y bash-completion
+            ;;
+        suse)
+            sudo zypper install -y bash-completion
+            ;;
+        gentoo)
+            sudo emerge bash-completion
+            ;;
+        mandriva)
+            sudo urpmi bash-completion
+            ;;
+        slackware)
+            echo "⚠️ Slackware detected: install bash-completion manually."
+            ;;
+        *)
+            echo "⚠️ Unknown distribution, please install bash-completion manually."
+            ;;
+    esac
+else
+    # Already installed, source it
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    fi
+fi
+
+#######################################################
+# WSL SPECIFIC ALIAS'S
+#######################################################
+
+if grep -q "microsoft" /proc/version; then                                                                                
+  alias gtc='cd /mnt/c/WSL'
+fi
+
+#######################################################
+# GKE SPECIFIC ALIAS'S
+#######################################################
+# Check if gcloud is installed
+if command -v gcloud &> /dev/null; then
+  gssh() {
+    if [ $# -ne 2 ]; then
+      echo "Usage: gssh <INSTANCE_NAME> <ZONE>"
+      return 1
+    fi
+    gcloud compute ssh "$1" --tunnel-through-iap --zone="$2"
+  }
+else
+  echo "gcloud CLI not found. Install it to use 'gssh'."
+fi
+
+if command -v gcloud &> /dev/null; then                                                                         
+  alias g='gcloud'
+fi
+
+#######################################################
+# K8S SPECIFIC ALIAS'S
+#######################################################
+if command -v kubectl &> /dev/null; then                                                                         
+  ### kubectl completion
+  echo "source <(kubectl completion bash)" >>  ~/.bashrc 
+  source  ~./bashrc
+  
+  alias k='kubectl'
+  alias kcc='kubectl config current-context'
+  alias kg='kubectl get'
+  alias kga='kubectl get all --all-namespaces'
+  alias kgp='kubectl get pods'
+  alias kgs='kubectl get services'
+  alias ksgp='kubectl get pods -n kube-system'
+  alias kuc='kubectl config use-context'
+fi
 
 #######################################################
 # MACHINE SPECIFIC ALIAS'S
@@ -593,6 +661,13 @@ trim()
         echo -n "$var"
 }
 
+ram_usage() {
+  awk '
+    $1=="MemAvailable:"{avail=$2}
+    $1=="MemTotal:"{total=$2}
+    END{printf("%.1f/%.1fG", avail/1024/1024, total/1024/1024)}' /proc/meminfo
+}
+
 #######################################################
 # Set the ultimate amazing command prompt
 #######################################################
@@ -669,24 +744,17 @@ function __setprompt
 
         # CPU
         PS1+="(\[${MAGENTA}\]CPU $(cpu)%"
-
-        # Jobs
-        PS1+="\[${DARKGRAY}\]:\[${MAGENTA}\]\j"
-
-        # Network Connections (for a server - comment out for non-server)
-        PS1+="\[${DARKGRAY}\]:\[${MAGENTA}\]Net $(awk 'END {print NR}' /proc/net/tcp)"
+        
+         # RAM libre/total
+        PS1+=" | \[${DARKGRAY}\]\[${MAGENTA}\]RAM $(ram_usage)"
 
         PS1+="\[${DARKGRAY}\])-"
 
-        # User and server
-        local SSH_IP=`echo $SSH_CLIENT | awk '{ print $1 }'`
-        local SSH2_IP=`echo $SSH2_CLIENT | awk '{ print $1 }'`
-        if [ $SSH2_IP ] || [ $SSH_IP ] ; then
-                PS1+="(\[${RED}\]\u@\h"
-        else
-                PS1+="(\[${RED}\]\u"
-        fi
+        PS1+="(\[${RED}\]${USER}@${HOSTNAME}\[${RED}\]\j"
+        
 
+
+        
         # Current directory
         PS1+="\[${DARKGRAY}\]:\[${BROWN}\]\w\[${DARKGRAY}\])-"
 
@@ -697,7 +765,7 @@ function __setprompt
         PS1+="\[${GREEN}\]\$(/bin/ls -A -1 | /usr/bin/wc -l)\[${DARKGRAY}\])"
 
         #Panda
-        PS1+="🐼"
+        PS1+=" 🐼 >"
 
         # Skip to the next line
         PS1+="\n"
