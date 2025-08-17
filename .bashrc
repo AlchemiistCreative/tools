@@ -763,7 +763,7 @@ function __setprompt
         PS1+="\[${GREEN}\]\$(/bin/ls -A -1 | /usr/bin/wc -l)\[${DARKGRAY}\])"
 
         #Panda
-        PS1+=" 🐼 >"
+        PS1+=" 🐼"
 
         # Skip to the next line
         PS1+="\n"
