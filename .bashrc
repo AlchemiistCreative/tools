@@ -161,14 +161,15 @@ if command -v kubectl &> /dev/null; then
   alias ksgp='kubectl get pods -n kube-system'
 
   # Register completions for aliases
-  complete -o default -F __start_kubectl k
-  complete -o default -F __start_kubectl kg
-  complete -o default -F __start_kubectl kgp
-  complete -o default -F __start_kubectl kgs
-  complete -o default -F __start_kubectl kga
-  complete -o default -F __start_kubectl kcc
-  complete -o default -F __start_kubectl kuc
-  complete -o default -F __start_kubectl ksgp
+  complete -F __start_kubectl k
+  complete -F __start_kubectl kg
+  complete -F __start_kubectl kgp
+  complete -F __start_kubectl kgs
+  complete -F __start_kubectl kga
+  complete -F __start_kubectl kcc
+  complete -F __start_kubectl kuc
+  complete -F __start_kubectl ksgp
+
 fi
 #######################################################
 # MACHINE SPECIFIC ALIAS'S
