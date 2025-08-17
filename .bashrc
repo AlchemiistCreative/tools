@@ -750,9 +750,6 @@ function __setprompt
 
         PS1+="(\[${RED}\]\u@\h"
         
-
-         
-        
         # Current directory
         PS1+="\[${DARKGRAY}\]:\[${BROWN}\]\w\[${DARKGRAY}\])-"
 
