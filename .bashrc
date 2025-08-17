@@ -451,7 +451,7 @@ distribution() {
     local dtype="unknown"
 
     if [ -f /etc/os-release ]; then
-        . /etc/os-release
+        source /etc/os-release
         case "$ID" in
             rocky|rhel|centos|fedora|almalinux)
                 dtype="redhat"
