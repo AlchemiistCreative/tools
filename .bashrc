@@ -446,45 +446,71 @@ pwdtail ()
         pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
 }
 
+ça serait pas mieux de se baser sur ça?
+> cat /etc/*lease
+NAME="Rocky Linux"
+VERSION="10.0 (Red Quartz)"
+ID="rocky"
+ID_LIKE="rhel centos fedora"
+VERSION_ID="10.0"
+PLATFORM_ID="platform:el10"
+PRETTY_NAME="Rocky Linux 10.0 (Red Quartz)"
+ANSI_COLOR="0;32"
+LOGO="fedora-logo-icon"
+CPE_NAME="cpe:/o:rocky:rocky:10::baseos"
+HOME_URL="https://rockylinux.org/"
+VENDOR_NAME="RESF"
+VENDOR_URL="https://resf.org/"
+BUG_REPORT_URL="https://bugs.rockylinux.org/"
+SUPPORT_END="2035-05-31"
+ROCKY_SUPPORT_PRODUCT="Rocky-Linux-10"
+ROCKY_SUPPORT_PRODUCT_VERSION="10.0"
+REDHAT_SUPPORT_PRODUCT="Rocky Linux"
+REDHAT_SUPPORT_PRODUCT_VERSION="10.0"
+Rocky Linux release 10.0 (Red Quartz)
+Rocky Linux release 10.0 (Red Quartz)
+Rocky Linux release 10.0 (Red Quartz)
+
 # Show the current distribution
-distribution ()
-{
-        local dtype
-        # Assume unknown
-        dtype="unknown"
+distribution() {
+    local dtype="unknown"
 
-        # First test against Fedora / RHEL / CentOS / generic Redhat derivative
-        if [ -r /etc/rc.d/init.d/functions ]; then
-                source /etc/rc.d/init.d/functions
-                [ zz`type -t passed 2>/dev/null` == "zzfunction" ] && dtype="redhat"
-
-        # Then test against SUSE (must be after Redhat,
-        # I've seen rc.status on Ubuntu I think? TODO: Recheck that)
-        elif [ -r /etc/rc.status ]; then
-                source /etc/rc.status
-                [ zz`type -t rc_reset 2>/dev/null` == "zzfunction" ] && dtype="suse"
-
-        # Then test against Debian, Ubuntu and friends
-        elif [ -r /lib/lsb/init-functions ]; then
-                source /lib/lsb/init-functions
-                [ zz`type -t log_begin_msg 2>/dev/null` == "zzfunction" ] && dtype="debian"
-
-        # Then test against Gentoo
-        elif [ -r /etc/init.d/functions.sh ]; then
-                source /etc/init.d/functions.sh
-                [ zz`type -t ebegin 2>/dev/null` == "zzfunction" ] && dtype="gentoo"
-
-        # For Mandriva we currently just test if /etc/mandriva-release exists
-        # and isn't empty (TODO: Find a better way :)
-        elif [ -s /etc/mandriva-release ]; then
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        case "$ID" in
+            rocky|rhel|centos|fedora|almalinux)
+                dtype="redhat"
+                ;;
+            debian|ubuntu|linuxmint|pop)
+                dtype="debian"
+                ;;
+            opensuse*|sles)
+                dtype="suse"
+                ;;
+            gentoo)
+                dtype="gentoo"
+                ;;
+            mandriva|mandrake)
                 dtype="mandriva"
-
-        # For Slackware we currently just test if /etc/slackware-version exists
-        elif [ -s /etc/slackware-version ]; then
+                ;;
+            slackware)
                 dtype="slackware"
+                ;;
+            *)
+                dtype="unknown"
+                ;;
+        esac
+    elif [ -f /etc/redhat-release ]; then
+        dtype="redhat"
+    elif [ -f /etc/SuSE-release ]; then
+        dtype="suse"
+    elif [ -f /etc/debian_version ]; then
+        dtype="debian"
+    elif [ -f /etc/slackware-version ]; then
+        dtype="slackware"
+    fi
 
-        fi
-        echo $dtype
+    echo "$dtype"
 }
 
 # Show the current version of the operating system
