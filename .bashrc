@@ -158,7 +158,7 @@ if command -v kubectl &> /dev/null; then
   alias kga='kubectl get all --all-namespaces'
   alias kcc='kubectl config current-context'
   alias kuc='kubectl config use-context'
-  alias ksgp='kubectl get pods -n kube-system'
+  alias kgsp='kubectl get pods -n kube-system'
 
   # Register completions for aliases
   complete -F __start_kubectl k
@@ -168,7 +168,7 @@ if command -v kubectl &> /dev/null; then
   complete -F __start_kubectl kga
   complete -F __start_kubectl kcc
   complete -F __start_kubectl kuc
-  complete -F __start_kubectl ksgp
+  complete -F __start_kubectl kgsp
 
 fi
 #######################################################
