@@ -149,7 +149,7 @@ fi
 if command -v kubectl &> /dev/null; then                                                                         
   ### kubectl completion
   echo "source <(kubectl completion bash)" >>  ~/.bashrc 
-  source  ~./.bashrc
+  source  ~/.bashrc
   
   alias k='kubectl'
   alias kcc='kubectl config current-context'
