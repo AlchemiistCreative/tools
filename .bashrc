@@ -750,7 +750,7 @@ function __setprompt
 
         PS1+="\[${DARKGRAY}\])-"
 
-        PS1+="(\[${RED}\]\u@\h"
+        PS1+="(\[${RED}\]\u@$(hostname -f 2>/dev/null || hostname)"
         
         # Current directory
         PS1+="\[${DARKGRAY}\]:\[${BROWN}\]\w\[${DARKGRAY}\])-"
