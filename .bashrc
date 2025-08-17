@@ -2,7 +2,9 @@
 iatest=$(expr index "$-" i)
 
 #######################################################
-# SOURCED ALIAS'S AND SCRIPTS BY alchemistcreative
+#
+# Author: Alchemist
+# 
 #######################################################
 
 
