@@ -7,6 +7,9 @@ iatest=$(expr index "$-" i)
 # 
 #######################################################
 
+#### Variables
+
+ISKUBEINSTALLED=0
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -170,6 +173,17 @@ if command -v kubectl &> /dev/null; then
   complete -F __start_kubectl kuc
   complete -F __start_kubectl kgsp
 
+  #### Kube PS1
+  mkdir -p ~/.k8s-tools
+  if [ ! -f ~/.k8s-tools/kube-ps1.sh ]; then
+           curl - O https://raw.githubusercontent.com/jonmosco/kube-ps1/refs/heads/master/kube-ps1.sh > ~/.k8s-tools/kube-ps1.sh
+           source ~/.k8s-tools/kube-ps1.sh
+           
+  else
+           source ~/.k8s-tools/kube-ps1.sh
+           
+  fi
+  
 fi
 #######################################################
 # MACHINE SPECIFIC ALIAS'S
@@ -771,6 +785,11 @@ function __setprompt
 
         # Number of files
         PS1+="\[${GREEN}\]\$(/bin/ls -A -1 | /usr/bin/wc -l)\[${DARKGRAY}\])"
+
+        # KUBE PS1 If installed
+        if type kube_ps1 &>/dev/null; then
+            PS1+="(\[${YELLOW}\]\$(kube_ps1)\[${DARKGRAY}\])"
+        fi
 
         #Panda
         PS1+=" 🐼"
