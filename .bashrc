@@ -148,9 +148,7 @@ fi
 #######################################################
 if command -v kubectl &> /dev/null; then                                                                         
   ### kubectl completion
-  mkdir /tmp/$USER
-  echo "source <(kubectl completion bash)" >>  /tmp/$USER/.kcompletion 
-  source /tmp/$USER/.kcompletion
+  source <(kubectl completion bash)
   
   alias k='kubectl'
   alias kcc='kubectl config current-context'
