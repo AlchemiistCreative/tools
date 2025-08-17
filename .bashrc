@@ -11,12 +11,51 @@ if [ -f /etc/bashrc ]; then
          . /etc/bashrc
 fi
 
-# Enable bash programmable completion features in interactive shells
-if [ -f /usr/share/bash-completion/bash_completion ]; then
+
+###### Check if bash-completion is installed
+if [ ! -f /usr/share/bash-completion/bash_completion ] && [ ! -f /etc/bash_completion  ; then
+    echo "bash-completion not installed ❌"
+    echo "Installing it..."
+
+    distro=$(distribution)
+
+    case $distro in
+        redhat)
+            if command -v dnf &>/dev/null; then
+                sudo dnf install -y bash-completion
+            else
+                sudo yum install -y bash-completion
+            fi
+            ;;
+        debian)
+            sudo apt-get update -y
+            sudo apt-get install -y bash-completion
+            ;;
+        suse)
+            sudo zypper install -y bash-completion
+            ;;
+        gentoo)
+            sudo emerge bash-completion
+            ;;
+        mandriva)
+            sudo urpmi bash-completion
+            ;;
+        slackware)
+            echo "⚠️ Slackware detected: install bash-completion manually."
+            ;;
+        *)
+            echo "⚠️ Unknown distribution, please install bash-completion manually."
+            ;;
+    esac
+
+else
+    # Already installed, source it
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
         . /usr/share/bash-completion/bash_completion
-elif [ -f /etc/bash_completion ]; then
+    elif [ -f /etc/bash_completion ]; then
         . /etc/bash_completion
 fi
+
 
 #######################################################
 # EXPORTS
@@ -73,48 +112,6 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
-###### Check if bash-completion is installed
-if [ ! -f /usr/share/bash-completion/bash_completion ]; then
-    echo "bash-completion not installed ❌"
-    echo "Installing it..."
-
-    distro=$(distribution)
-
-    case $distro in
-        redhat)
-            if command -v dnf &>/dev/null; then
-                sudo dnf install -y bash-completion
-            else
-                sudo yum install -y bash-completion
-            fi
-            ;;
-        debian)
-            sudo apt-get update -y
-            sudo apt-get install -y bash-completion
-            ;;
-        suse)
-            sudo zypper install -y bash-completion
-            ;;
-        gentoo)
-            sudo emerge bash-completion
-            ;;
-        mandriva)
-            sudo urpmi bash-completion
-            ;;
-        slackware)
-            echo "⚠️ Slackware detected: install bash-completion manually."
-            ;;
-        *)
-            echo "⚠️ Unknown distribution, please install bash-completion manually."
-            ;;
-    esac
-else
-    # Already installed, source it
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
-        . /usr/share/bash-completion/bash_completion
-    fi
-fi
-
 #######################################################
 # WSL SPECIFIC ALIAS'S
 #######################################################
@@ -149,7 +146,7 @@ fi
 if command -v kubectl &> /dev/null; then                                                                         
   ### kubectl completion
   echo "source <(kubectl completion bash)" >>  ~/.bashrc 
-  source  ~./bashrc
+  source  ~./.bashrc
   
   alias k='kubectl'
   alias kcc='kubectl config current-context'
