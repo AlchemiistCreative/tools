@@ -148,6 +148,7 @@ fi
 #######################################################
 if command -v kubectl &> /dev/null; then                                                                         
   ### kubectl completion
+  mkdir /tmp/$USER
   echo "source <(kubectl completion bash)" >>  /tmp/$USER/.kcompletion 
   source /tmp/$USER/.kcompletion
   
