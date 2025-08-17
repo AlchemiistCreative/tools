@@ -13,7 +13,7 @@ fi
 
 
 ###### Check if bash-completion is installed
-if [ ! -f /usr/share/bash-completion/bash_completion ] && [ ! -f /etc/bash_completion  ; then
+if [ ! -f /usr/share/bash-completion/bash_completion ] && [ ! -f /etc/bash_completion ]; then
     echo "bash-completion not installed ❌"
     echo "Installing it..."
 
@@ -47,14 +47,15 @@ if [ ! -f /usr/share/bash-completion/bash_completion ] && [ ! -f /etc/bash_compl
             echo "⚠️ Unknown distribution, please install bash-completion manually."
             ;;
     esac
-
 else
     # Already installed, source it
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         . /usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
         . /etc/bash_completion
+    fi
 fi
+
 
 
 #######################################################
