@@ -691,9 +691,7 @@ ram_usage() {
 #######################################################
 # Set the ultimate amazing command prompt
 #######################################################
-if [ -s ~/.k8s-tools/kube-ps1.sh ]; then
-   source ~/.k8s-tools/kube-ps1.sh
-fi
+
 
 alias cpu="grep 'cpu ' /proc/stat | awk '{usage=(\$2+\$4)*100/(\$2+\$4+\$5)} END {print usage}' | awk '{printf(\"%.1f\n\", \$1)}'"
 function __setprompt
@@ -785,8 +783,13 @@ function __setprompt
         PS1+="\[${GREEN}\]\$(/bin/ls -A -1 | /usr/bin/wc -l)\[${DARKGRAY}\])"
 
         # KUBE PS1 If installed
+        if [ -s ~/.k8s-tools/kube-ps1.sh ]; then
+           source ~/.k8s-tools/kube-ps1.sh
+        fi
+
+        # KUBE PS1 If installed
         if type kube_ps1 &>/dev/null; then
-            PS1+="(\[${YELLOW}\]\$(kube_ps1)\[${DARKGRAY}\])"
+            PS1+="\$(kube_ps1)"
         fi
 
         #Panda
