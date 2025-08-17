@@ -146,10 +146,11 @@ fi
 #######################################################
 # K8S SPECIFIC ALIAS'S
 #######################################################
-if command -v kubectl &> /dev/null; then                                                                         
-  ### kubectl completion
+if command -v kubectl &> /dev/null; then
+  # Enable kubectl bash completion
   source <(kubectl completion bash)
-  
+
+  # Aliases
   alias k='kubectl'
   alias kcc='kubectl config current-context'
   alias kg='kubectl get'
@@ -158,8 +159,17 @@ if command -v kubectl &> /dev/null; then
   alias kgs='kubectl get services'
   alias ksgp='kubectl get pods -n kube-system'
   alias kuc='kubectl config use-context'
-fi
 
+  # Completion for aliases
+  complete -F __start_kubectl k
+  complete -F __start_kubectl kg
+  complete -F __start_kubectl kga
+  complete -F __start_kubectl kgp
+  complete -F __start_kubectl kgs
+  complete -F __start_kubectl ksgp
+  complete -F __start_kubectl kuc
+  complete -F __start_kubectl kcc
+fi
 #######################################################
 # MACHINE SPECIFIC ALIAS'S
 #######################################################
