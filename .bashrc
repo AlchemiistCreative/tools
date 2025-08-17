@@ -176,7 +176,7 @@ if command -v kubectl &> /dev/null; then
   #### Kube PS1
   mkdir -p ~/.k8s-tools
   if [ ! -f ~/.k8s-tools/kube-ps1.sh ]; then
-           curl - O https://raw.githubusercontent.com/jonmosco/kube-ps1/refs/heads/master/kube-ps1.sh > ~/.k8s-tools/kube-ps1.sh
+           curl -O https://raw.githubusercontent.com/jonmosco/kube-ps1/refs/heads/master/kube-ps1.sh > ~/.k8s-tools/kube-ps1.sh
            source ~/.k8s-tools/kube-ps1.sh
            
   else
