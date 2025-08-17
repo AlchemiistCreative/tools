@@ -173,16 +173,11 @@ if command -v kubectl &> /dev/null; then
   complete -F __start_kubectl kuc
   complete -F __start_kubectl kgsp
 
-  #### Kube PS1
   mkdir -p ~/.k8s-tools
-  if [ ! -f ~/.k8s-tools/kube-ps1.sh ]; then
-           curl -O https://raw.githubusercontent.com/jonmosco/kube-ps1/refs/heads/master/kube-ps1.sh > ~/.k8s-tools/kube-ps1.sh
-           source ~/.k8s-tools/kube-ps1.sh
-           
-  else
-           source ~/.k8s-tools/kube-ps1.sh
-           
+  if [ ! -s ~/.k8s-tools/kube-ps1.sh ]; then
+      curl -sLo ~/.k8s-tools/kube-ps1.sh https://raw.githubusercontent.com/jonmosco/kube-ps1/master/kube-ps1.sh
   fi
+  source ~/.k8s-tools/kube-ps1.sh
   
 fi
 #######################################################
