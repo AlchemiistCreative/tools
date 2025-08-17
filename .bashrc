@@ -748,7 +748,7 @@ function __setprompt
 
         PS1+="\[${DARKGRAY}\])-"
 
-        PS1+="(\[${RED}\]${USER}@${HOSTNAME}\[${RED}\]\"
+        PS1+="(\[${RED}\]${USER}@${HOSTNAME}\[${RED}\]\)"
         
 
 
